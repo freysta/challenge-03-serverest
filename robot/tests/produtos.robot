@@ -18,3 +18,21 @@ Cenário de Falha: Tentar Excluir Produto Sem Token
     Cadastrar Novo Produto e Salvar ID
     Tentar Excluir Produto Sem Token e Validar Erro
     Deletar Produto Criado
+
+Cenário de Limite: Validar Preço Zero
+    [Documentation]    Testa que preço zero não é aceito
+    Tentar Cadastrar Produto Com Preço Zero
+
+Cenário de Limite: Validar Preço Negativo
+    [Documentation]    Testa que preço negativo não é aceito
+    Tentar Cadastrar Produto Com Preço Negativo
+
+Cenário de Limite: Validar Quantidade Zero
+    [Documentation]    Testa que quantidade zero não é aceita
+    Tentar Cadastrar Produto Com Quantidade Zero
+
+Cenário de Falha: Produto Duplicado
+    [Documentation]    Valida erro ao tentar cadastrar produto com nome duplicado
+    Cadastrar Novo Produto e Salvar ID
+    Tentar Cadastrar Produto Duplicado
+    Deletar Produto Criado
