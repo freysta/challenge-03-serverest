@@ -7,8 +7,9 @@ Resource        produtos_keywords.robot
 Resource        carrinhos_keywords.robot
 
 *** Variables ***
-${BASE_URL}     https://serverest.dev
+${URL_BASE}     https://serverest.dev
 
 *** Keywords ***
 Conectar na API ServeRest
-    Create Session    serverest    ${BASE_URL}
+    [Documentation]    Estabelece conexão com a API ServeRest para execução dos testes
+    Create Session    serverest    ${URL_BASE}
