@@ -19,9 +19,9 @@ Cenario de Falha: Tentar Cadastrar Email Duplicado
     Deletar Usuario Criado
 
 Cenario de Limite: Validar Tamanho Minimo de Senha
-    [Documentation]    Testa o limite mínimo de 5 caracteres para senha
+    [Documentation]    Testa o limite mínimo de 3 caracteres para senha
     [Tags]    usuarios    limite    negativo
-    Tentar Cadastrar Usuario Com Senha Curta e Validar Erro
+    Tentar Cadastrar Usuario Com Senha Muito Curta e Validar Erro
 
 Cenario de Falha: Login Com Credenciais Invalidas
     [Documentation]    Valida mensagem de erro para login inválido

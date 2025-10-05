@@ -29,9 +29,9 @@ Cenário de Limite: Validar Preço Negativo
     [Documentation]    Testa que preço negativo não é aceito
     Tentar Cadastrar Produto Com Preco Negativo e Validar Erro
 
-Cenário de Limite: Validar Quantidade Zero
-    [Documentation]    Testa que quantidade zero não é aceita
-    Tentar Cadastrar Produto Com Quantidade Zero e Validar Erro
+Cenário de Limite: Validar Quantidade Negativa
+    [Documentation]    Testa que quantidade negativa não é aceita
+    Tentar Cadastrar Produto Com Quantidade Negativa e Validar Erro
 
 Cenário de Falha: Produto Duplicado
     [Documentation]    Valida erro ao tentar cadastrar produto com nome duplicado

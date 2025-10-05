@@ -42,17 +42,17 @@ Realizar Login e Salvar Token
     ${token}=          Obter Valor Do Campo    ${response}    authorization
     Set Suite Variable    ${TOKEN_AUTH}    ${token}
 
-Tentar Cadastrar Usuario Com Senha Curta e Validar Erro
-    [Documentation]    Tenta cadastrar um usuário com uma senha muito curta.
+Tentar Cadastrar Usuario Com Senha Muito Curta e Validar Erro
+    [Documentation]    Tenta cadastrar um usuário com senha de 3 caracteres.
     ${timestamp}=    Get Current Date    result_format=epoch
     ${payload}=      Create Dictionary
-    ...              nome=Usuario Senha Curta ${timestamp}
-    ...              email=senha.curta.${timestamp}@qa.com.br
-    ...              password=1234
+    ...              nome=Usuario Senha Muito Curta ${timestamp}
+    ...              email=senha.muito.curta.${timestamp}@qa.com.br
+    ...              password=123
     ...              administrador=true
     ${response}=    POST On Session    serverest    ${ENDPOINTS}[usuarios]    json=${payload}    expected_status=any
     Validar Status Code    ${response}    400
-    Validar Mensagem    ${response}    password deve ter pelo menos 5 caracteres    password
+    Validar Mensagem    ${response}    password deve ter pelo menos 3 caracteres    password
 
 Tentar Login Com Credenciais Invalidas
     [Documentation]    Tenta fazer login com credenciais inválidas

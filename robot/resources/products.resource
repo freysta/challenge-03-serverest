@@ -64,18 +64,18 @@ Tentar Cadastrar Produto Com Preco Negativo e Validar Erro
     Validar Status Code    ${response}    400
     Validar Mensagem    ${response}    preco deve ser um número positivo    preco
 
-Tentar Cadastrar Produto Com Quantidade Zero e Validar Erro
-    [Documentation]    Tenta cadastrar um produto com quantidade zero.
+Tentar Cadastrar Produto Com Quantidade Negativa e Validar Erro
+    [Documentation]    Tenta cadastrar um produto com quantidade negativa.
     ${timestamp}=    Get Current Date    result_format=epoch
     ${payload}=      Create Dictionary
-    ...              nome=Produto Qtd Zero ${timestamp}
+    ...              nome=Produto Qtd Negativa ${timestamp}
     ...              preco=100
-    ...              descricao=Produto com quantidade zero
-    ...              quantidade=0
+    ...              descricao=Produto com quantidade negativa
+    ...              quantidade=-1
     ${headers}=    Gerar Headers Com Token    ${TOKEN_AUTH}
     ${response}=    POST On Session    serverest    ${ENDPOINTS}[produtos]    headers=${headers}    json=${payload}    expected_status=any
     Validar Status Code    ${response}    400
-    Validar Mensagem    ${response}    quantidade deve ser maior ou igual a 1    quantidade
+    Validar Mensagem    ${response}    quantidade deve ser maior ou igual a 0    quantidade
 
 Tentar Cadastrar Produto Duplicado e Validar Erro
     [Documentation]    Tenta cadastrar um produto com um nome que já existe.
