@@ -1,13 +1,27 @@
-# Robot Framework output files
-results/
+# Arquivos de resultado dos testes
+evidencias_*/
+resultados/
 *.log
 *.html
 *.xml
 output.xml
 report.html
 log.html
+saida_console.txt
 
-# Python virtual environment
-venv/
-*.pyc
+# Python
 __pycache__/
+*.pyc
+*.pyo
+venv/
+.Python
+
+# Arquivos temporários
+*.tmp
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
