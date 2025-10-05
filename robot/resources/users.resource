@@ -8,11 +8,12 @@ Cadastrar Novo Usuario e Salvar ID
     ...              password=senha123
     ...              administrador=true
     Set Suite Variable    ${DADOS_USUARIO}    ${payload}
-    ${response}=    POST On Session    serverest    ${ENDPOINTS}[usuarios]    json=${payload}
+    ${response}=    POST On Session    serverest    ${ENDPOINTS}[usuarios]    json=${payload}    expected_status=any
     Validar Status Code    ${response}    201
     Validar Mensagem    ${response}    ${MENSAGENS}[cadastro_sucesso]
     ${id_usuario}=    Extrair ID da Resposta    ${response.json()}
     Set Suite Variable    ${ID_USUARIO}    ${id_usuario}
+    Sleep    2s
 
 
 
@@ -27,7 +28,7 @@ Deletar Usuario Criado
 
 Tentar Cadastrar Usuario Duplicado e Validar Erro
     [Documentation]    Tenta cadastrar um usuário com um e-mail que já existe.
-    ${response}=    POST On Session    serverest    ${ENDPOINTS}[usuarios]    json=${DADOS_USUARIO}
+    ${response}=    POST On Session    serverest    ${ENDPOINTS}[usuarios]    json=${DADOS_USUARIO}    expected_status=any
     Validar Status Code    ${response}    400
     Validar Mensagem    ${response}    ${MENSAGENS}[email_duplicado]
 
@@ -36,7 +37,7 @@ Realizar Login e Salvar Token
     ${credenciais}=    Create Dictionary
     ...                email=${DADOS_USUARIO}[email]
     ...                password=${DADOS_USUARIO}[password]
-    ${response}=       POST On Session    serverest    ${ENDPOINTS}[login]    json=${credenciais}
+    ${response}=       POST On Session    serverest    ${ENDPOINTS}[login]    json=${credenciais}    expected_status=any
     Validar Status Code    ${response}    200
     ${token}=          Obter Valor Do Campo    ${response}    authorization
     Set Suite Variable    ${TOKEN_AUTH}    ${token}
@@ -49,7 +50,7 @@ Tentar Cadastrar Usuario Com Senha Curta e Validar Erro
     ...              email=senha.curta.${timestamp}@qa.com.br
     ...              password=1234
     ...              administrador=true
-    ${response}=    POST On Session    serverest    ${ENDPOINTS}[usuarios]    json=${payload}
+    ${response}=    POST On Session    serverest    ${ENDPOINTS}[usuarios]    json=${payload}    expected_status=any
     Validar Status Code    ${response}    400
     Validar Mensagem    ${response}    password deve ter pelo menos 5 caracteres    password
 
@@ -58,6 +59,6 @@ Tentar Login Com Credenciais Invalidas
     ${credenciais}=    Create Dictionary
     ...                email=inexistente@qa.com.br
     ...                password=senhaerrada
-    ${response}=       POST On Session    serverest    ${ENDPOINTS}[login]    json=${credenciais}
+    ${response}=       POST On Session    serverest    ${ENDPOINTS}[login]    json=${credenciais}    expected_status=any
     Validar Status Code    ${response}    401
     Validar Mensagem    ${response}    ${MENSAGENS}[login_invalido]
