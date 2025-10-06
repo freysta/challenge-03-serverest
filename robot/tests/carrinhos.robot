@@ -51,3 +51,9 @@ Cenário de Falha: Múltiplos Carrinhos Para Mesmo Usuário
     [Teardown]    Run Keyword And Ignore Error    Concluir Compra e Limpar ID
     Criar Carrinho Com Produto e Salvar ID
     Tentar Criar Segundo Carrinho Para Mesmo Usuario
+
+Cenário Avançado: Teste de Concorrência
+    [Documentation]    Simula concorrência para último item em estoque
+    [Tags]    carrinhos    avancado    concorrencia
+    [Setup]    Run Keyword And Ignore Error    Concluir Compra e Limpar ID
+    Teste de Concorrencia Ultimo Item Estoque

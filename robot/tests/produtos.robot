@@ -38,3 +38,15 @@ Cenário de Falha: Produto Duplicado
     Cadastrar Novo Produto e Salvar ID
     Tentar Cadastrar Produto Duplicado e Validar Erro
     Deletar Produto Criado
+
+Cenário Avançado: Tipo de Dados Inválido
+    [Documentation]    Valida rejeição de tipos de dados incorretos
+    [Tags]    produtos    avancado    tipos_dados
+    Teste de Tipo de Dados Invalido Preco String
+
+Cenário Avançado: Método HTTP Incorreto
+    [Documentation]    Valida rejeição de métodos HTTP inadequados
+    [Tags]    produtos    avancado    http_methods
+    Cadastrar Novo Produto e Salvar ID
+    Teste de Metodo HTTP Incorreto
+    Deletar Produto Criado

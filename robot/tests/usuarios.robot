@@ -27,3 +27,13 @@ Cenario de Falha: Login Com Credenciais Invalidas
     [Documentation]    Valida mensagem de erro para login inválido
     [Tags]    login    negativo    validacao
     Tentar Login Com Credenciais Invalidas
+
+Cenario Avancado: Teste de Idempotencia DELETE
+    [Documentation]    Valida que DELETE pode ser executado várias vezes
+    [Tags]    usuarios    avancado    idempotencia
+    Teste de Idempotencia DELETE Usuario
+
+Cenario Avancado: Teste de Paginacao
+    [Documentation]    Valida paginação na listagem de usuários
+    [Tags]    usuarios    avancado    paginacao
+    Teste de Paginacao Listar Usuarios

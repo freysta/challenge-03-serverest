@@ -62,3 +62,47 @@ Tentar Login Com Credenciais Invalidas
     ${response}=       POST On Session    serverest    ${ENDPOINTS}[login]    json=${credenciais}    expected_status=any
     Validar Status Code    ${response}    401
     Validar Mensagem    ${response}    ${MENSAGENS}[login_invalido]
+
+Teste de Idempotencia DELETE Usuario
+    [Documentation]    Valida que DELETE é idempotente - pode ser executado várias vezes
+    ${timestamp}=    Get Current Date    result_format=epoch
+    ${payload}=      Create Dictionary
+    ...              nome=Usuario Idempotencia ${timestamp}
+    ...              email=idempotencia.${timestamp}@qa.com.br
+    ...              password=senha123
+    ...              administrador=true
+    ${response}=    POST On Session    serverest    ${ENDPOINTS}[usuarios]    json=${payload}    expected_status=any
+    Validar Status Code    ${response}    201
+    ${id_usuario}=    Extrair ID da Resposta    ${response.json()}
+    
+    # Primeira exclusão - deve funcionar
+    ${url}=    Catenate    SEPARATOR=/    ${ENDPOINTS}[usuarios]    ${id_usuario}
+    ${response1}=    DELETE On Session    serverest    ${url}    expected_status=any
+    Validar Status Code    ${response1}    200
+    
+    # Segunda exclusão - deve ser idempotente
+    ${response2}=    DELETE On Session    serverest    ${url}    expected_status=any
+    Should Be True    ${response2.status_code} in [200, 404]
+    Log    Segunda exclusão retornou status: ${response2.status_code}
+
+Teste de Paginacao Listar Usuarios
+    [Documentation]    Valida paginação na listagem de usuários
+    # Cria 3 usuários para garantir dados
+    FOR    ${i}    IN RANGE    3
+        ${timestamp}=    Get Current Date    result_format=epoch
+        ${payload}=      Create Dictionary
+        ...              nome=Usuario Paginacao ${i} ${timestamp}
+        ...              email=paginacao.${i}.${timestamp}@qa.com.br
+        ...              password=senha123
+        ...              administrador=true
+        POST On Session    serverest    ${ENDPOINTS}[usuarios]    json=${payload}    expected_status=any
+    END
+    
+    # Testa paginação
+    ${params}=    Create Dictionary    _page=1    _limit=2
+    ${response}=    GET On Session    serverest    ${ENDPOINTS}[usuarios]    params=${params}    expected_status=any
+    Validar Status Code    ${response}    200
+    ${usuarios}=    Set Variable    ${response.json()}[usuarios]
+    ${quantidade}=    Get Length    ${usuarios}
+    Should Be True    ${quantidade} <= 2
+    Log    Página 1 retornou ${quantidade} usuários

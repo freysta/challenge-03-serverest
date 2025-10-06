@@ -83,3 +83,23 @@ Tentar Cadastrar Produto Duplicado e Validar Erro
     ${response}=    POST On Session    serverest    ${ENDPOINTS}[produtos]    headers=${headers}    json=${DADOS_PRODUTO}    expected_status=any
     Validar Status Code    ${response}    400
     Validar Mensagem    ${response}    ${MENSAGENS}[produto_duplicado]
+
+Teste de Tipo de Dados Invalido Preco String
+    [Documentation]    Valida que API rejeita preço como string
+    ${timestamp}=    Get Current Date    result_format=epoch
+    ${payload}=      Create Dictionary
+    ...              nome=Produto Preco String ${timestamp}
+    ...              preco=cem reais
+    ...              descricao=Produto com preço inválido
+    ...              quantidade=10
+    ${headers}=    Gerar Headers Com Token    ${TOKEN_AUTH}
+    ${response}=    POST On Session    serverest    ${ENDPOINTS}[produtos]    headers=${headers}    json=${payload}    expected_status=any
+    Should Be True    ${response.status_code} in [400, 422]
+    Log    API retornou status ${response.status_code} para preço inválido
+
+Teste de Metodo HTTP Incorreto
+    [Documentation]    Valida que API rejeita método HTTP inadequado
+    ${url}=    Catenate    SEPARATOR=/    ${ENDPOINTS}[produtos]    ${ID_PRODUTO}
+    ${response}=    POST On Session    serverest    ${url}    expected_status=any
+    Should Be True    ${response.status_code} in [404, 405]
+    Log    Método POST em rota de detalhe retornou: ${response.status_code}

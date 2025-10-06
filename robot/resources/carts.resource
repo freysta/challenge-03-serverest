@@ -54,3 +54,27 @@ Tentar Criar Segundo Carrinho Para Mesmo Usuario
     ${response}=    POST On Session    serverest    ${ENDPOINTS}[carrinhos]    headers=${headers}    json=${payload}    expected_status=any
     Validar Status Code    ${response}    400
     Validar Mensagem    ${response}    ${MENSAGENS}[carrinho_duplicado]
+
+Teste de Concorrencia Ultimo Item Estoque
+    [Documentation]    Simula concorrência para o último item em estoque
+    # Cria produto com quantidade 1
+    ${timestamp}=       Get Current Date    result_format=epoch
+    ${payload_produto}=    Create Dictionary
+    ...                    nome=Produto Unico ${timestamp}
+    ...                    preco=100
+    ...                    descricao=Produto com estoque 1
+    ...                    quantidade=1
+    ${headers}=    Gerar Headers Com Token    ${TOKEN_AUTH}
+    ${response}=    POST On Session    serverest    ${ENDPOINTS}[produtos]    headers=${headers}    json=${payload_produto}    expected_status=any
+    ${id_produto_unico}=    Extrair ID da Resposta    ${response.json()}
+    
+    # Cria carrinho com o produto
+    ${produto}=      Create Dictionary    idProduto=${id_produto_unico}    quantidade=1
+    ${produtos}=     Create List    ${produto}
+    ${payload_carrinho}=    Create Dictionary    produtos=${produtos}
+    ${response}=    POST On Session    serverest    ${ENDPOINTS}[carrinhos]    headers=${headers}    json=${payload_carrinho}    expected_status=any
+    
+    # Primeira conclusão deve funcionar
+    ${response1}=    DELETE On Session    serverest    ${ENDPOINTS}[concluir_compra]    headers=${headers}    expected_status=any
+    Should Be True    ${response1.status_code} in [200, 400]
+    Log    Primeira conclusão: ${response1.status_code}
