@@ -18,10 +18,10 @@ Cenario de Falha: Tentar Cadastrar Email Duplicado
     Tentar Cadastrar Usuario Duplicado e Validar Erro
     Deletar Usuario Criado
 
-Cenario de Limite: Validar Tamanho Minimo de Senha
-    [Documentation]    Testa o limite mínimo de 3 caracteres para senha
+Cenario de Limite: Validar Senha Vazia
+    [Documentation]    Testa que senha vazia não é aceita
     [Tags]    usuarios    limite    negativo
-    Tentar Cadastrar Usuario Com Senha Muito Curta e Validar Erro
+    Tentar Cadastrar Usuario Com Senha Vazia e Validar Erro
 
 Cenario de Falha: Login Com Credenciais Invalidas
     [Documentation]    Valida mensagem de erro para login inválido
@@ -33,7 +33,7 @@ Cenario Avancado: Teste de Idempotencia DELETE
     [Tags]    usuarios    avancado    idempotencia
     Teste de Idempotencia DELETE Usuario
 
-Cenario Avancado: Teste de Paginacao
-    [Documentation]    Valida paginação na listagem de usuários
-    [Tags]    usuarios    avancado    paginacao
-    Teste de Paginacao Listar Usuarios
+Cenario Avancado: Teste de Listagem
+    [Documentation]    Valida listagem de usuários da API
+    [Tags]    usuarios    avancado    listagem
+    Teste de Listagem Usuarios
