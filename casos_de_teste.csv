@@ -1,0 +1,171 @@
+Summary,Description,Component,Priority,Labels
+"[POST /usuarios] - SUCESSO - Cadastro e Login de Usuario","h2. Passos
+1. Enviar POST para /usuarios com dados válidos
+2. Realizar login com credenciais criadas
+3. Deletar usuário criado
+
+h2. Resultado Esperado
+- POST retorna 201 Created com mensagem de sucesso
+- Login retorna 200 OK com token de autorização
+- DELETE retorna 200 OK","Usuarios",Crítica,"smoke,positivo"
+"[POST /usuarios] - FALHA - Email Duplicado","h2. Passos
+1. Cadastrar usuário com email específico
+2. Tentar cadastrar outro usuário com mesmo email
+
+h2. Resultado Esperado
+- Segundo cadastro retorna 400 Bad Request
+- Mensagem: ""Este email já está sendo usado""","Usuarios",Alta,"negativo,validacao"
+"[POST /usuarios] - LIMITE - Senha Vazia","h2. Passos
+1. Enviar POST para /usuarios com senha vazia
+2. Validar resposta de erro
+
+h2. Resultado Esperado
+- Retorna 400 Bad Request
+- Mensagem de erro sobre campo password obrigatório","Usuarios",Média,"limite,negativo"
+"[POST /login] - FALHA - Credenciais Inválidas","h2. Passos
+1. Enviar POST para /login com email/senha incorretos
+2. Validar resposta de erro
+
+h2. Resultado Esperado
+- Retorna 401 Unauthorized
+- Mensagem: ""Email e/ou senha inválidos""","Usuarios",Alta,"negativo,validacao"
+"[DELETE /usuarios] - AVANÇADO - Teste de Idempotência","h2. Passos
+1. Criar usuário e obter ID
+2. Executar DELETE primeira vez
+3. Executar DELETE segunda vez no mesmo ID
+
+h2. Resultado Esperado
+- Primeira exclusão: 200 OK
+- Segunda exclusão: 200 OK ou 404 Not Found (idempotente)","Usuarios",Média,"avancado,idempotencia"
+"[GET /usuarios] - AVANÇADO - Teste de Listagem","h2. Passos
+1. Enviar GET para /usuarios
+2. Validar estrutura da resposta
+
+h2. Resultado Esperado
+- Retorna 200 OK
+- Resposta contém array de usuários
+- Estrutura JSON válida","Usuarios",Baixa,"avancado,listagem"
+"[POST /produtos] - SUCESSO - Cadastrar e Deletar com Autenticação","h2. Passos
+1. Obter token de autenticação válido
+2. Enviar POST para /produtos com dados válidos
+3. Deletar produto criado
+
+h2. Resultado Esperado
+- POST retorna 201 Created
+- DELETE retorna 200 OK
+- Mensagens de sucesso apropriadas","Produtos",Crítica,"positivo,smoke"
+"[DELETE /produtos] - FALHA - Sem Token","h2. Passos
+1. Criar produto com token válido
+2. Tentar deletar produto sem fornecer token
+3. Limpar dados de teste
+
+h2. Resultado Esperado
+- Retorna 401 Unauthorized
+- Mensagem sobre token ausente/inválido","Produtos",Crítica,"negativo,seguranca"
+"[POST /produtos] - LIMITE - Preço Zero","h2. Passos
+1. Obter token válido
+2. Enviar POST com preço = 0
+3. Validar erro
+
+h2. Resultado Esperado
+- Retorna 400 Bad Request
+- Mensagem: ""preco deve ser um número positivo""","Produtos",Alta,"limite,negativo"
+"[POST /produtos] - LIMITE - Preço Negativo","h2. Passos
+1. Obter token válido
+2. Enviar POST com preço negativo (-10)
+3. Validar erro
+
+h2. Resultado Esperado
+- Retorna 400 Bad Request
+- Mensagem: ""preco deve ser um número positivo""","Produtos",Alta,"limite,negativo"
+"[POST /produtos] - LIMITE - Quantidade Negativa","h2. Passos
+1. Obter token válido
+2. Enviar POST com quantidade negativa (-1)
+3. Validar erro
+
+h2. Resultado Esperado
+- Retorna 400 Bad Request
+- Mensagem sobre quantidade inválida","Produtos",Alta,"limite,negativo"
+"[POST /produtos] - FALHA - Produto Duplicado","h2. Passos
+1. Criar produto com nome específico
+2. Tentar criar outro produto com mesmo nome
+3. Limpar dados
+
+h2. Resultado Esperado
+- Segundo cadastro retorna 400 Bad Request
+- Mensagem: ""Já existe produto com esse nome""","Produtos",Alta,"negativo,validacao"
+"[POST /produtos] - AVANÇADO - Tipo de Dados Inválido","h2. Passos
+1. Obter token válido
+2. Enviar POST com preço como string (""cem reais"")
+3. Validar rejeição
+
+h2. Resultado Esperado
+- Retorna 400 ou 422
+- API rejeita tipo de dado incorreto graciosamente","Produtos",Média,"avancado,tipos_dados"
+"[POST /produtos/{id}] - AVANÇADO - Método HTTP Incorreto","h2. Passos
+1. Criar produto e obter ID
+2. Enviar POST para rota de detalhe (/produtos/{id})
+3. Validar erro de método
+
+h2. Resultado Esperado
+- Retorna 404 Not Found ou 405 Method Not Allowed
+- API rejeita método inadequado para a rota","Produtos",Baixa,"avancado,http_methods"
+"[POST /carrinhos] - SUCESSO - Fluxo Completo","h2. Passos
+1. Criar usuário, fazer login e criar produto
+2. Criar carrinho com produto
+3. Concluir compra
+4. Limpar dados
+
+h2. Resultado Esperado
+- Criação: 201 Created
+- Conclusão: 200 OK com baixa no estoque","Carrinhos",Crítica,"positivo,smoke"
+"[DELETE /produtos] - INTEGRAÇÃO - Produto em Carrinho","h2. Passos
+1. Criar usuário, produto e carrinho
+2. Tentar excluir produto que está no carrinho
+3. Validar bloqueio
+
+h2. Resultado Esperado
+- Retorna 400 Bad Request
+- Mensagem: ""Não é permitido excluir produto que faz parte de carrinho""","Carrinhos",Crítica,"integracao,negativo"
+"[DELETE /carrinhos/cancelar-compra] - SUCESSO - Cancelar e Restaurar Estoque","h2. Passos
+1. Criar carrinho com produto
+2. Cancelar compra
+3. Validar restauração do estoque
+
+h2. Resultado Esperado
+- Retorna 200 OK
+- Mensagem sobre estoque reabastecido
+- Estoque do produto restaurado","Carrinhos",Alta,"positivo,estoque"
+"[POST /carrinhos] - FALHA - Produto Inexistente","h2. Passos
+1. Obter token válido
+2. Tentar criar carrinho com produto inexistente
+3. Validar erro
+
+h2. Resultado Esperado
+- Retorna 400 Bad Request
+- Mensagem: ""Produto não encontrado""","Carrinhos",Alta,"negativo,validacao"
+"[POST /carrinhos] - FALHA - Quantidade Maior que Estoque","h2. Passos
+1. Criar produto com estoque limitado
+2. Tentar criar carrinho com quantidade > estoque
+3. Validar erro
+
+h2. Resultado Esperado
+- Retorna 400 Bad Request
+- Mensagem: ""Produto não possui quantidade suficiente""","Carrinhos",Alta,"negativo,estoque"
+"[POST /carrinhos] - FALHA - Múltiplos Carrinhos","h2. Passos
+1. Criar carrinho para usuário
+2. Tentar criar segundo carrinho para mesmo usuário
+3. Validar regra de negócio
+
+h2. Resultado Esperado
+- Retorna 400 Bad Request
+- Mensagem: ""Não é permitido ter mais de 1 carrinho""","Carrinhos",Média,"negativo,regra_negocio"
+"[POST /carrinhos] - AVANÇADO - Teste de Concorrência","h2. Passos
+1. Criar produto com estoque = 1
+2. Simular disputa pelo último item
+3. Validar comportamento da API
+
+h2. Resultado Esperado
+- Primeira requisição: sucesso
+- Requisições subsequentes: erro de estoque insuficiente
+- Consistência dos dados mantida","Carrinhos",Média,"avancado,concorrencia"

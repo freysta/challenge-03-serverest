@@ -103,3 +103,43 @@ Teste de Metodo HTTP Incorreto
     ${response}=    POST On Session    serverest    ${url}    expected_status=any
     Should Be True    ${response.status_code} in [404, 405]
     Log    Método POST em rota de detalhe retornou: ${response.status_code}
+
+Teste de Payload Muito Grande
+    [Documentation]    Testa se API lida com payloads excessivamente grandes
+    ${timestamp}=    Get Current Date    result_format=epoch
+    ${nome_gigante}=    Evaluate    'A' * 10000  # Nome com 10k caracteres
+    ${payload}=      Create Dictionary
+    ...              nome=${nome_gigante}
+    ...              preco=100
+    ...              descricao=Teste de payload gigante
+    ...              quantidade=1
+    ${headers}=    Gerar Headers Com Token    ${TOKEN_AUTH}
+    ${response}=    POST On Session    serverest    ${ENDPOINTS}[produtos]    headers=${headers}    json=${payload}    expected_status=any
+    Should Be True    ${response.status_code} in [400, 413, 422]
+    Log    Payload gigante retornou: ${response.status_code}
+
+Teste de Caracteres Especiais Maliciosos
+    [Documentation]    Testa se API é vulnerável a caracteres especiais
+    ${timestamp}=    Get Current Date    result_format=epoch
+    ${payload}=      Create Dictionary
+    ...              nome=<script>alert('XSS')</script>
+    ...              preco=100
+    ...              descricao='; DROP TABLE produtos; --
+    ...              quantidade=1
+    ${headers}=    Gerar Headers Com Token    ${TOKEN_AUTH}
+    ${response}=    POST On Session    serverest    ${ENDPOINTS}[produtos]    headers=${headers}    json=${payload}    expected_status=any
+    Should Be True    ${response.status_code} in [400, 422]
+    Log    Caracteres maliciosos retornaram: ${response.status_code}
+
+Teste de Preco Com Muitas Casas Decimais
+    [Documentation]    Testa se API lida com preços com muitas casas decimais
+    ${timestamp}=    Get Current Date    result_format=epoch
+    ${payload}=      Create Dictionary
+    ...              nome=Produto Decimal ${timestamp}
+    ...              preco=99.999999999999999999
+    ...              descricao=Teste de precisão decimal
+    ...              quantidade=1
+    ${headers}=    Gerar Headers Com Token    ${TOKEN_AUTH}
+    ${response}=    POST On Session    serverest    ${ENDPOINTS}[produtos]    headers=${headers}    json=${payload}    expected_status=any
+    Log    Preço com muitas casas decimais: ${response.status_code}
+    # Pode passar ou falhar dependendo da implementação

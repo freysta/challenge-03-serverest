@@ -37,3 +37,18 @@ Cenario Avancado: Teste de Listagem
     [Documentation]    Valida listagem de usuários da API
     [Tags]    usuarios    avancado    listagem
     Teste de Listagem Usuarios
+
+Cenario de Segurança: Email Muito Longo
+    [Documentation]    Testa se API valida tamanho máximo de email
+    [Tags]    usuarios    seguranca    limite
+    Teste de Email Muito Longo
+
+Cenario de Segurança: Injeção SQL
+    [Documentation]    Testa se API é vulnerável a injeção SQL
+    [Tags]    usuarios    seguranca    sql_injection
+    Teste de Injecao SQL no Email
+
+Cenario de Performance: Rate Limiting
+    [Documentation]    Testa se API tem limite de requisições
+    [Tags]    usuarios    performance    rate_limit
+    Teste de Rate Limiting

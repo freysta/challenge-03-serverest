@@ -57,3 +57,19 @@ Cenário Avançado: Teste de Concorrência
     [Tags]    carrinhos    avancado    concorrencia
     [Setup]    Run Keyword And Ignore Error    Concluir Compra e Limpar ID
     Teste de Concorrencia Ultimo Item Estoque
+
+Cenário de Stress: Carrinho com 1000 Produtos
+    [Documentation]    Testa se API lida com carrinho muito grande
+    [Tags]    carrinhos    stress    payload
+    [Setup]    Run Keyword And Ignore Error    Concluir Compra e Limpar ID
+    Teste de Carrinho Com 1000 Produtos
+
+Cenário de Segurança: Token Expirado
+    [Documentation]    Testa comportamento com token inválido
+    [Tags]    carrinhos    seguranca    token
+    Teste de Token Expirado
+
+Cenário de Limite: ID Muito Longo
+    [Documentation]    Testa validação de formato do ID
+    [Tags]    carrinhos    limite    id
+    Teste de Produto Com ID Muito Longo

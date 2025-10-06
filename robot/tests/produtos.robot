@@ -50,3 +50,18 @@ Cenário Avançado: Método HTTP Incorreto
     Cadastrar Novo Produto e Salvar ID
     Teste de Metodo HTTP Incorreto
     Deletar Produto Criado
+
+Cenário de Segurança: Payload Gigante
+    [Documentation]    Testa se API lida com payloads muito grandes
+    [Tags]    produtos    seguranca    payload
+    Teste de Payload Muito Grande
+
+Cenário de Segurança: Caracteres Maliciosos
+    [Documentation]    Testa se API é vulnerável a XSS e SQL Injection
+    [Tags]    produtos    seguranca    xss
+    Teste de Caracteres Especiais Maliciosos
+
+Cenário de Limite: Preço com Muitas Casas Decimais
+    [Documentation]    Testa precisão de números decimais
+    [Tags]    produtos    limite    decimal
+    Teste de Preco Com Muitas Casas Decimais

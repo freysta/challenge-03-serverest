@@ -78,3 +78,37 @@ Teste de Concorrencia Ultimo Item Estoque
     ${response1}=    DELETE On Session    serverest    ${ENDPOINTS}[concluir_compra]    headers=${headers}    expected_status=any
     Should Be True    ${response1.status_code} in [200, 400]
     Log    Primeira conclusão: ${response1.status_code}
+
+Teste de Carrinho Com 1000 Produtos
+    [Documentation]    Testa se API lida com carrinho muito grande
+    ${headers}=    Gerar Headers Com Token    ${TOKEN_AUTH}
+    ${produtos_list}=    Create List
+    FOR    ${i}    IN RANGE    1000
+        ${produto_item}=    Create Dictionary    idProduto=${ID_PRODUTO}    quantidade=1
+        Append To List    ${produtos_list}    ${produto_item}
+    END
+    ${payload}=    Create Dictionary    produtos=${produtos_list}
+    ${response}=    POST On Session    serverest    ${ENDPOINTS}[carrinhos]    headers=${headers}    json=${payload}    expected_status=any
+    Should Be True    ${response.status_code} in [400, 413, 422]
+    Log    Carrinho com 1000 produtos: ${response.status_code}
+
+Teste de Token Expirado
+    [Documentation]    Testa comportamento com token inválido/expirado
+    ${headers}=    Create Dictionary    Authorization=Bearer token_fake_expirado_12345
+    ${produto}=      Create Dictionary    idProduto=${ID_PRODUTO}    quantidade=1
+    ${produtos}=     Create List    ${produto}
+    ${payload}=      Create Dictionary    produtos=${produtos}
+    ${response}=    POST On Session    serverest    ${ENDPOINTS}[carrinhos]    headers=${headers}    json=${payload}    expected_status=any
+    Should Be Equal As Numbers    ${response.status_code}    401
+    Log    Token expirado retornou: ${response.status_code}
+
+Teste de Produto Com ID Muito Longo
+    [Documentation]    Testa se API valida formato do ID do produto
+    ${headers}=    Gerar Headers Com Token    ${TOKEN_AUTH}
+    ${id_gigante}=    Evaluate    'a' * 1000
+    ${produto}=      Create Dictionary    idProduto=${id_gigante}    quantidade=1
+    ${produtos}=     Create List    ${produto}
+    ${payload}=      Create Dictionary    produtos=${produtos}
+    ${response}=    POST On Session    serverest    ${ENDPOINTS}[carrinhos]    headers=${headers}    json=${payload}    expected_status=any
+    Should Be True    ${response.status_code} in [400, 422]
+    Log    ID gigante retornou: ${response.status_code}

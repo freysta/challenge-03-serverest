@@ -93,3 +93,44 @@ Teste de Listagem Usuarios
     ${quantidade}=    Get Length    ${usuarios}
     Should Be True    ${quantidade} >= 0
     Log    API retornou ${quantidade} usuários
+
+Teste de Email Muito Longo
+    [Documentation]    Testa se API valida tamanho máximo de email
+    ${timestamp}=    Get Current Date    result_format=epoch
+    ${email_gigante}=    Evaluate    'a' * 200 + '@' + 'b' * 200 + '.com'
+    ${payload}=      Create Dictionary
+    ...              nome=Usuario Email Longo ${timestamp}
+    ...              email=${email_gigante}
+    ...              password=senha123
+    ...              administrador=true
+    ${response}=    POST On Session    serverest    ${ENDPOINTS}[usuarios]    json=${payload}    expected_status=any
+    Should Be True    ${response.status_code} in [400, 422]
+    Log    Email muito longo retornou: ${response.status_code}
+
+Teste de Injecao SQL no Email
+    [Documentation]    Testa se API é vulnerável a injeção SQL
+    ${timestamp}=    Get Current Date    result_format=epoch
+    ${payload}=      Create Dictionary
+    ...              nome=Usuario SQL Injection
+    ...              email=admin'; DROP TABLE usuarios; --@test.com
+    ...              password=senha123
+    ...              administrador=true
+    ${response}=    POST On Session    serverest    ${ENDPOINTS}[usuarios]    json=${payload}    expected_status=any
+    Should Be True    ${response.status_code} in [400, 422]
+    Log    Injeção SQL retornou: ${response.status_code}
+
+Teste de Rate Limiting
+    [Documentation]    Testa se API tem limite de requisições por minuto
+    FOR    ${i}    IN RANGE    50
+        ${timestamp}=    Get Current Date    result_format=epoch
+        ${payload}=      Create Dictionary
+        ...              nome=Usuario Rate ${i} ${timestamp}
+        ...              email=rate.${i}.${timestamp}@test.com
+        ...              password=senha123
+        ...              administrador=true
+        ${response}=    POST On Session    serverest    ${ENDPOINTS}[usuarios]    json=${payload}    expected_status=any
+        IF    ${response.status_code} == 429
+            Log    Rate limiting ativado na requisição ${i}
+            BREAK
+        END
+    END
