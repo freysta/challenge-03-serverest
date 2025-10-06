@@ -4,7 +4,14 @@
 **Versão:** 3.0  
 **Data:** Outubro 2025
 
-Este repositório contém a solução completa para o Challenge 03, implementando **21 testes automatizados** para a API ServeRest com Robot Framework. O projeto vai além dos testes funcionais básicos, incluindo testes avançados de robustez, idempotência e conformidade REST.
+Este repositório contém a solução completa para o Challenge 03, implementando **31 testes automatizados** para a API ServeRest com Robot Framework. O projeto vai além dos testes funcionais básicos, incluindo testes avançados de segurança, stress e conformidade REST.
+
+## 🏆 **Destaques do Projeto**
+- ✅ **31 testes automatizados** (21 básicos + 10 avançados)
+- ✅ **1 bug encontrado** na API (payload gigante aceito)
+- ✅ **96% de sucesso** nos testes
+- ✅ **Testes de segurança** (XSS, SQL Injection, Rate Limiting)
+- ✅ **Arquitetura profissional** com Page Object Pattern
 
 **URL da API:** https://compassuol.serverest.dev/
 
@@ -33,20 +40,20 @@ challenge-03-serverest/
 │   │   ├── products.resource  # Keywords para produtos
 │   │   └── carts.resource     # Keywords para carrinhos
 │   ├── tests/                 # Casos de teste
-│   │   ├── usuarios.robot     # 6 testes de usuários
-│   │   ├── produtos.robot     # 8 testes de produtos
-│   │   └── carrinhos.robot    # 7 testes de carrinhos
+│   │   ├── usuarios.robot     # 9 testes de usuários
+│   │   ├── produtos.robot     # 11 testes de produtos
+│   │   └── carrinhos.robot    # 11 testes de carrinhos
 │   └── requirements.txt       # Dependências
 ├── plano_de_testes_v2.md     # Plano de testes detalhado
-├── GUIA_COMMITS.md           # Guia de organização
+├── casos_de_teste_completos.csv # Casos para Jira
 └── README.md                 # Este arquivo
 ```
 
 ---
 
-## 🎯 Funcionalidades Testadas (21 Testes)
+## 🎯 Funcionalidades Testadas (31 Testes)
 
-### 👤 Módulo Usuários (6 testes)
+### 👤 Módulo Usuários (9 testes)
 **Endpoints:** `POST /usuarios`, `GET /usuarios`, `DELETE /usuarios/{id}`, `POST /login`
 
 **Testes Básicos:**
@@ -58,8 +65,9 @@ challenge-03-serverest/
 **Testes Avançados:**
 - ✅ **Idempotência**: DELETE pode ser executado múltiplas vezes
 - ✅ **Listagem**: Validação da API de listagem
+- ✅ **Segurança**: Email muito longo, SQL Injection, Rate Limiting
 
-### 🛍️ Módulo Produtos (8 testes)
+### 🛍️ Módulo Produtos (11 testes)
 **Endpoints:** `POST /produtos`, `GET /produtos`, `DELETE /produtos/{id}`
 
 **Testes Básicos:**
@@ -71,8 +79,10 @@ challenge-03-serverest/
 **Testes Avançados:**
 - ✅ **Tipos de Dados**: Rejeita preço como string
 - ✅ **Métodos HTTP**: Rejeita POST em rota de detalhe
+- ❌ **BUG ENCONTRADO**: API aceita payload gigante (10k caracteres)
+- ✅ **Segurança**: XSS, precisão decimal
 
-### 🛒 Módulo Carrinhos (7 testes)
+### 🛒 Módulo Carrinhos (11 testes)
 **Endpoints:** `POST /carrinhos`, `DELETE /carrinhos/concluir-compra`, `DELETE /carrinhos/cancelar-compra`
 
 **Testes Básicos:**
@@ -84,6 +94,8 @@ challenge-03-serverest/
 
 **Testes Avançados:**
 - ✅ **Concorrência**: Simula disputa por último item em estoque
+- ✅ **Stress**: Carrinho com 1000 produtos
+- ✅ **Segurança**: Token expirado, ID muito longo
 
 ---
 
@@ -113,13 +125,13 @@ python3 -m robot tests/
 
 ### Execução por Módulo
 ```bash
-# Apenas usuários (6 testes)
+# Apenas usuários (9 testes)
 python3 -m robot tests/usuarios.robot
 
-# Apenas produtos (8 testes)  
+# Apenas produtos (11 testes)  
 python3 -m robot tests/produtos.robot
 
-# Apenas carrinhos (7 testes)
+# Apenas carrinhos (11 testes)
 python3 -m robot tests/carrinhos.robot
 ```
 
@@ -128,11 +140,11 @@ python3 -m robot tests/carrinhos.robot
 # Apenas testes avançados
 python3 -m robot --include avancado tests/
 
-# Apenas testes de limite
-python3 -m robot --include limite tests/
+# Apenas testes de segurança
+python3 -m robot --include seguranca tests/
 
-# Apenas testes positivos
-python3 -m robot --include positivo tests/
+# Apenas o bug encontrado
+python3 -m robot --include BUG tests/
 ```
 
 ---
@@ -140,17 +152,17 @@ python3 -m robot --include positivo tests/
 ## 📊 Métricas de Qualidade
 
 ### Cobertura de Testes
-- **Usuários**: 6 testes (4 básicos + 2 avançados)
-- **Produtos**: 8 testes (6 básicos + 2 avançados)
-- **Carrinhos**: 7 testes (6 básicos + 1 avançado)
-- **Total**: 21 testes automatizados (100% de sucesso)
+- **Usuários**: 9 testes (6 básicos + 3 avançados)
+- **Produtos**: 11 testes (8 básicos + 3 avançados)
+- **Carrinhos**: 11 testes (7 básicos + 4 avançados)
+- **Total**: 31 testes automatizados (96% de sucesso - 1 bug encontrado)
 
 ### Tipos de Teste Implementados
 - ✅ **Testes Positivos** (5): Fluxos de sucesso
-- ✅ **Testes Negativos** (11): Validações de erro
-- ✅ **Testes de Limite** (3): Bordas das regras de negócio
+- ✅ **Testes Negativos** (16): Validações de erro
+- ✅ **Testes de Limite** (5): Bordas das regras de negócio
 - ✅ **Testes de Integração** (1): Interação entre módulos
-- ✅ **Testes Avançados** (5): Robustez e conformidade REST
+- ✅ **Testes Avançados** (10): Robustez e conformidade REST
 
 ### Validações Implementadas
 - ✅ **Status Codes HTTP** (200, 201, 400, 401, 404, 405)
@@ -180,7 +192,8 @@ Os relatórios são gerados automaticamente na pasta raiz:
 2. **Tipos de Dados**: Testa rejeição de tipos incorretos (string no lugar de number)
 3. **Métodos HTTP**: Valida rejeição de verbos inadequados para cada rota
 4. **Concorrência**: Simula cenários de disputa por recursos limitados
-5. **Listagem**: Valida endpoints de consulta e suas respostas
+5. **Segurança**: XSS, SQL Injection, Rate Limiting
+6. **Stress**: Payloads gigantes e carrinhos com muitos itens
 
 ### Qualidade e Organização
 - ✅ **Estrutura Profissional**: Separação clara entre testes e lógica
@@ -188,14 +201,6 @@ Os relatórios são gerados automaticamente na pasta raiz:
 - ✅ **Validação Dupla**: Status code + mensagem específica
 - ✅ **Versionamento**: Uso de branches para desenvolvimento
 - ✅ **Documentação**: Código autodocumentado com tags explicativas
-
----
-
-## 📝 Documentação Adicional
-
-- **`plano_de_testes_v2.md`** - Plano de testes completo com estratégias
-- **`GUIA_COMMITS.md`** - Guia para organização de commits
-- **API ServeRest**: https://compassuol.serverest.dev/
 
 ---
 
